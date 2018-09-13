@@ -1,25 +1,25 @@
 
-var $_inter;
-var blueball = false;
-var redball = false;
-var deletewall = false;
-var keyActions = { 37:'left',38:'up',39:'right',40:'down',35:'space'};
-var canvas = document.getElementById('canvas');
+var $_inter; // intervalid for typeWritter
+var blueball = false; // computerkey: true->key grabbed false-> key not grabbed
+var redball = false; // internetkey: true->key grabbed false-> key not grabbed
+var deletewall = false; // for removing wall: remove wall when computer key in grabbed
+var keyActions = { 37:'left',38:'up',39:'right',40:'down',35:'space'};// Keyboardinput
+var canvas = document.getElementById('canvas');//canvas1
 var ctx = canvas.getContext('2d');
-var width = canvas.width;
-var height = canvas.height;
+var width = canvas.width;// width of canvas
+var height = canvas.height;// height of canvas
 var blocksize = 10;
 var body = document.getElementById('body');
-var walkersmsg = "Oops White Walkers";
+var walkersmsg = "Oops White Walkers";// Whitewalker gameover msg
 var walke = false;
-var drawBorder = function(){
+var drawBorder = function(){ // To draw outer border on game area.
 	ctx.fillStyle = 'grey';
 	ctx.fillRect(0,0,width,blocksize);
 	ctx.fillRect(0,height-blocksize,width,blocksize);
 	ctx.fillRect(0,0,blocksize,height);
 	ctx.fillRect(width - blocksize,0,blocksize,height);
 };
-var circle = function(x,y,radius,color,fillCircle){
+var circle = function(x,y,radius,color,fillCircle){ //To draw circle
 		ctx.beginPath();
 		ctx.arc(x,y,radius,0,Math.PI*2,false);
 		if(fillCircle){
@@ -27,10 +27,10 @@ var circle = function(x,y,radius,color,fillCircle){
       ctx.fill();
 		}
 };
-var Ball = function(){
+var Ball = function(){ //for key
 
 };
-var startScreen = function(){
+var startScreen = function(){ // Game Start screen
 	ctx.clearRect(0,0,600,600);
 	ctx.fillStyle = "#FFF";
 	ctx.textAlign = 'center';
@@ -39,7 +39,7 @@ var startScreen = function(){
 	ctx.font = "30px Serif";
 	ctx.fillText("Press Space to Start",width/2,height/2);
 }
-Ball.prototype.draw = function(x,y,color){
+Ball.prototype.draw = function(x,y,color){ // Draw key
 		  x-=5;
 		  y-=4;
 			ctx.strokeStyle = color;
@@ -49,7 +49,7 @@ Ball.prototype.draw = function(x,y,color){
 			ctx.fillRect(x+11,y+3,2,6);
 			ctx.fillRect(x+16,y+3,2,9);
      };
-Ball.prototype.checkcollision = function(){
+Ball.prototype.checkcollision = function(){ // Key Collision
 
     if(computer.x >= 120 && computer.x <= 140 &&  computer.y >= 10 &&  computer.y <= 30){
     	  blueball = true;
@@ -67,44 +67,46 @@ Ball.prototype.checkcollision = function(){
         internet.yspeed = 5;
     }
 }
+// Computer object
 var Comp = function(){
 	  this.x = width-blocksize-20;
 	  this.y = height-blocksize-20;
       this.xspeed = 5;
       this.yspeed = 5;
 };
+// Internet object
 var Intern = function(){
 	  this.x = blocksize;
 	  this.y = blocksize;
       this.xspeed = 5;
       this.yspeed = 5;
 };
-
+// Whitewalker1 obj
 var Enemycomp = function(){
       this.x = width/2;
       this.y = blocksize;
       this.xspeed = 5;
       this.yspeed = 5;
 };
-
+// Whitewalker2 obj
 var Enemyintern = function(){
       this.x = width/2;
       this.y = height-blocksize-20;
       this.xspeed = 5;
       this.yspeed = 5;
 };
-
+// Whitewalker1 draw
 Enemycomp.prototype.draw = function(){
         ctx.fillStyle = 'white' ;
         ctx.fillRect(this.x,this.y,20,20);
 
 }
-
+// Whitewalker2 draw
 Enemyintern.prototype.draw = function(){
         ctx.fillStyle = 'white' ;
         ctx.fillRect(this.x,this.y,20,20);
 }
-
+// Whitewalker1 move
 Enemycomp.prototype.move = function(direction){
         if(direction == 'up'){
             this.y -= this.yspeed;
@@ -134,6 +136,7 @@ Enemycomp.prototype.move = function(direction){
 			this.y = height-blocksize-20;
 		}
      }
+// Whitewalker2 move
 Enemyintern.prototype.move = function(direction){
         if(direction == 'up'){
             this.y += this.yspeed;
@@ -162,7 +165,7 @@ Enemyintern.prototype.move = function(direction){
 		}
      }
 
-
+// Computer obj draw
 Comp.prototype.draw = function(color){
 	ctx.strokeStyle = 'white';
 	ctx.strokeRect(this.x,this.y,20,16);
@@ -175,6 +178,7 @@ Comp.prototype.draw = function(color){
 	ctx.fillRect(this.x+5,this.y+16,10,4);
 };
 
+// Internet obj drawing
 Intern.prototype.draw = function(color){
 	ctx.strokeStyle = 'blue';
     ctx.strokeRect(this.x,this.y,20,20);
@@ -188,7 +192,7 @@ Intern.prototype.draw = function(color){
     ctx.stroke();
     circle(this.x+10,this.y+16,2,'blue',true);
 };
-
+// Computer obj movement code
 Comp.prototype.move = function(direction){
         if(direction == 'up'){
             this.y -= this.yspeed;
@@ -218,6 +222,7 @@ Comp.prototype.move = function(direction){
 			this.y = height-blocksize-20;
 		}
      }
+// Internet obj movement code
 Intern.prototype.move = function(direction){
         if(direction == 'up'){
 
@@ -249,12 +254,13 @@ Intern.prototype.move = function(direction){
 			this.y = height-blocksize-20;
 		}
      }
-
+// Computer-Wall collision detection
 Comp.prototype.checkcollision = function(x,y,w,z,ide){
 	if (this.x-2 < x + w && this.x + 25 > x && this.y-2 < y + z && 25 + this.y > y) {
            gameover(ide);
         }
 }
+// Computer collision with AI wall
 Comp.prototype.collision = function(ide){
   if (this.x-2 < walk.x + 30 && this.x + 25 > walk.x && this.y-2 < walk.y + 160 && 25 + this.y > walk.y) {
            gameover(ide);
@@ -267,11 +273,13 @@ Comp.prototype.collision = function(ide){
         }
 
 }
+// Internet collision with  wall
 Intern.prototype.checkcollision = function(x,y,w,z,ide){
 	if (this.x-2 < x + w && this.x + 25 > x && this.y-2 < y + z && 25 + this.y > y) {
                    gameover(ide);
         }
 }
+// Internet collision with  AI wall
 Intern.prototype.collision = function(ide){
   if (this.x-2 < walk.x + 30 && this.x + 25 > walk.x && this.y-2 < walk.y + 160 && 25 + this.y > walk.y) {
            gameover(ide);
@@ -283,6 +291,7 @@ Intern.prototype.collision = function(ide){
            gameover(ide);
         }
 }
+// Whitewalker1 collision with computer,internet,whitewalker2
 Enemycomp.prototype.checkcollision = function(ide){
   if (this.x < computer.x + 20 && this.x + 20 > computer.x && <!-- blue , downred , anotherdownitself-->
       this.y < computer.y + 20 && 20 + this.y > computer.y) {
@@ -300,6 +309,7 @@ if (this.x < enemyr.x + 20 && this.x + 20 > enemyr.x &&
        gameover(ide);
 }
 }
+// Whitewalker2 collision with computer,internet,whitewalker1
 Enemyintern.prototype.checkcollision = function(ide){
    if (this.x < computer.x + 20 && this.x + 20 > computer.x &&
       this.y < computer.y + 20 && 20 + this.y > computer.y) {
@@ -317,13 +327,13 @@ Enemyintern.prototype.checkcollision = function(ide){
         walke = true;
        gameover(ide);
 }
-}
+}// Whitewalker1 collision with walls
 Enemycomp.prototype.wallcollision = function(x,y,w,z,ide){
       if (this.x-2 < x + w && this.x + 25 > x && this.y-2 < y + z && 25 + this.y > y) {
             walke = true;
            gameover(ide);
         }
-}
+}// Whitewalker1 collision with AI walls
 Enemycomp.prototype.collision = function(ide){
       if (this.x-2 < walk.x + 30 && this.x + 25 > walk.x && this.y-2 < walk.y + 160 && 25 + this.y > walk.y) {
       	   walke = true;
@@ -335,13 +345,13 @@ Enemycomp.prototype.collision = function(ide){
   if (this.x-2 < walk3.x + 30 && this.x + 25 > walk3.x && this.y-2 < walk3.y + 175 && 25 + this.y > walk3.y) {  walke = true;
            gameover(ide);
         }
-}
+}// Whitewalker2 collision with walls
 Enemyintern.prototype.wallcollision = function(x,y,w,z,ide){
       if (this.x-2 < x + w && this.x + 25 > x && this.y-2 < y + z && 25 + this.y > y) {
             walke = true;
             gameover(ide);
         }
-}
+}// Whitewalker2 collision with AI walls
 Enemyintern.prototype.collision = function(ide){
       if (this.x-2 < walk.x + 30 && this.x + 25 > walk.x && this.y-2 < walk.y + 160 && 25 + this.y > walk.y) {
       	walke = true;
@@ -356,23 +366,23 @@ Enemyintern.prototype.collision = function(ide){
 
 }
 
-
+// Wall obj
 var Dangerwall = function(){
 
 }
-
+// AI1 wall
 var Walkwall = function(){
       this.x = 80;
       this.y = 70;
       this.xspeed = 3;
 }
-
+// AI1 wall draw
 Walkwall.prototype.draw = function(){
   ctx.strokeStyle = 'green';
   ctx.lineWidth = 1;
   ctx.strokeRect(this.x,this.y,30,160);
 }
-
+// AI1 wall move
 Walkwall.prototype.move = function(){
      this.x += this.xspeed;
 
@@ -380,19 +390,19 @@ Walkwall.prototype.move = function(){
       this.xspeed = -this.xspeed;
      }
 }
-
+// AI2 wall obj
 var Walkwall2 = function(){
       this.x = 480;
       this.y = 380;
       this.xspeed = -3;
 }
-
+// AI2 wall draw
 Walkwall2.prototype.draw = function(){
   ctx.strokeStyle = 'green';
   ctx.lineWidth = 1;
   ctx.strokeRect(this.x,this.y,30,160);
 }
-
+// AI2 wall move
 Walkwall2.prototype.move = function(){
      this.x += this.xspeed;
 
@@ -400,19 +410,19 @@ Walkwall2.prototype.move = function(){
       this.xspeed = -this.xspeed;
      }
 }
-
+// AI3 wall obj
 var Walkwall3 = function(){
       this.x = 480;
       this.y = 70;
       this.xspeed = -5;
 }
-
+// AI3 wall draw
 Walkwall3.prototype.draw = function(){
   ctx.strokeStyle = 'green';
   ctx.lineWidth = 1;
   ctx.strokeRect(this.x,this.y,30,175);
 }
-
+// AI3 wall move
 Walkwall3.prototype.move = function(){
      this.x += this.xspeed;
 
@@ -420,7 +430,7 @@ Walkwall3.prototype.move = function(){
       this.xspeed = -this.xspeed;
      }
 }
-
+// wall draw
 Dangerwall.prototype.draw = function(x,y,widthh,heightt,color){
 	var brickHeight = 10;
 	var brickWidth = 20;
@@ -447,18 +457,18 @@ Dangerwall.prototype.draw = function(x,y,widthh,heightt,color){
 }
 
 var gameoverState = true;
-var walk = new Walkwall();
-var walk2 = new Walkwall2();
-var walk3 = new Walkwall3();
+var walk = new Walkwall(); //AI1 wall
+var walk2 = new Walkwall2();//AI2 wall
+var walk3 = new Walkwall3();//AI3 wall
 var ball = new Ball();
-var computer = new Comp();
-var internet = new Intern();
-var wall = new Dangerwall();
-var enemyb = new Enemycomp();
-var enemyr = new Enemyintern();
+var computer = new Comp(); //computer
+var internet = new Intern();//internet
+var wall = new Dangerwall();//wall
+var enemyb = new Enemycomp(); //whitewalker1
+var enemyr = new Enemyintern();//whitewalker2
 var firstRun = true;
 var bodyy = document.getElementById('body');
-     bodyy.onkeydown = function(event){
+     bodyy.onkeydown = function(event){ //keyboard input
 
      	if(event.keyCode == 32){
 					if(firstRun){
@@ -477,7 +487,7 @@ var bodyy = document.getElementById('body');
      	  enemyr.move(direction);
      	}
      }
-
+//gameover
 var gameover = function(x){
 		clearInterval(x);
 		gameoverState = true;
@@ -494,6 +504,7 @@ var gameover = function(x){
 		ctx.fillText("Press space to restart :)",width/2,height/2+80);
 	};
 var manualId = 1;
+//typewriter style font
 var typeWritterWrite = function(str, startX, startY, lineHeight, padding){
 	"use strict";
     var cursorX = startX || 0;
@@ -516,6 +527,7 @@ var typeWritterWrite = function(str, startX, startY, lineHeight, padding){
         cursorX += w;
     }, 30);
 };
+//manual
 var showManual = function() {
 	"use strict";
 	switch(manualId) {
@@ -542,6 +554,7 @@ var showManual = function() {
 	gameoverState = true;
 
 }
+//level1
 var level1 = function(){
 	clearInterval($_inter);
 	gameoverState = false;
@@ -585,6 +598,7 @@ IntervalId = setInterval(function(){
      },30)
 };
 var currentLevel = level1;
+//level2
 var level2 = function(){
 	clearInterval($_inter);
 	manualId = 3;
@@ -647,7 +661,7 @@ var level2 = function(){
         ctx.strokeRect(0,0,width,height);
 	},30)
 };
-
+//level3
 var level3 = function(){
 	   clearInterval($_inter);
 		manualId = 4;
@@ -703,7 +717,7 @@ var level3 = function(){
     ctx.strokeRect(0,0,width,height);
   },30)
 };
-
+//level4
 var level4 = function(){
 		manualId = 5;
 		clearInterval($_inter);
@@ -771,6 +785,7 @@ var level4 = function(){
     ctx.strokeRect(0,0,width,height);
     },30);
 };
+//level5
 var level5 = function(){
   currentLevel = level5;
   clearInterval($_inter);
