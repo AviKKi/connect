@@ -1,5 +1,8 @@
 # Connect
-Entrie for js13k 2018
+Entrie for js13k 2018, it a global game jam with challenge of creating a game in 13Kb of JS.
+🎉🎉 We got **82n rank** in it 🎉🎉
+Play it online, [here](https://js13kgames.com/entries/connect)
+
 
 # Instructions
 Silly Sam(my colleague) always does something funny with my work system to knock me offline, help me to connect to the network.
